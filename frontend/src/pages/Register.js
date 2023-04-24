@@ -25,7 +25,6 @@ function Register() {
     const onChange =(e)=>{
       setFormValue({...formValue,[e.target.name]: e.target.value})
       }  
-    console.log(formValue)
     const handleSubmit =(e)=>{
       e.preventDefault()
       dispatch(register({formValue,toast,navigate}))

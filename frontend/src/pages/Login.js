@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -8,9 +8,16 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom' 
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../Redux/Slices/UserSlice';
+import {toast} from 'react-toastify'
 
 function Login() {
+  const dispatch= useDispatch();
+  const navigate = useNavigate();
+  const {userLoggedIn,appErr} = useSelector((state)=>state.userAuth)
+
     const [formValue,setFormValue]= useState({
         email:'',
         password:'',
@@ -18,9 +25,17 @@ function Login() {
     const onChange =(e)=>{
       setFormValue({...formValue,[e.target.name]: e.target.value})
       }  
-    const handleSubmit =()=>{}
+    const handleSubmit =(e)=>{
+      e.preventDefault();
+      dispatch(login({formValue,toast,navigate}))
+    }
+    useEffect(()=>{
+      toast.error(appErr)
+    })
   return (
-    <Container component="main" maxWidth="xs">
+    <>
+    {!(userLoggedIn?.found) &&
+      (<Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
@@ -78,7 +93,8 @@ function Login() {
             </Grid>
           </Box>
         </Box>
-      </Container>
+      </Container>)}
+      </>
   )
 }
 
